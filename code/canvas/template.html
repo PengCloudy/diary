@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<!-- https://blog.csdn.net/column/details/webgl.html?&page=1 -->
+<body>
+    <canvas id="canvas" width="1000" height="500"></canvas>
+    <script src="./js/template.js"></script>
+    <script src="./js/minMatrix.js"></script>
+    <script id="vs" type="x-shader/x-vertex">
+        attribute vec3 position;
+        attribute vec4 color;
+        uniform mat4 mvpMatrix;
+
+        void main(void) {
+            gl_Position = mvpMatrix * vec4(position, 1.0);
+        }
+    </script>
+    <script id="fs" type="x-shader/x-fragment">
+        void main(void) {
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+    </script>
+    <script>
+        draw();
+    </script>
+</body>
+</html>

@@ -1,17 +1,67 @@
-/* * Description : Array and textureless GLSL 2D/3D/4D simplex  *            noise functions. *     Author : Ian McEwan, Ashima Arts. * Maintainer : stegu *   Lastmod : 20110822 (ijm) *   License : Copyright (C) 2011 Ashima Arts. All rights reserved. *             Distributed under the MIT License. See LICENSE file. *             https://github.com/ashima/webgl-noise *             https://github.com/stegu/webgl-noise */
+function SiriPlayer() {
+    var u = r("@marcom/ac-shader-player-2d").ShaderPlayer2D,
+        p = r("./fragmentShader.js"),
+        l = r("./white-fragmentShader.js"),
+        q = r("@marcom/ac-object/defaults");
 
-vec3 mod289(vec3 x) {  return x - floor(x * (1.0 / 289.0)) * 289.0;}
-vec4 mod289(vec4 x) {  return x - floor(x * (1.0 / 289.0)) * 289.0;}
-vec4 permute(vec4 x) {     return mod289(((x*34.0)+1.0)*x);}
-vec4 taylorInvSqrt(vec4 r){  return 1.79284291400159 - 0.85373472095314 * r;}
-float snoise(vec3 v)  {   
-    const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;  
-    const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);  
-    vec3 i  = floor(v + dot(v, C.yyy) );  
-    vec3 x0 =   v - i + dot(i, C.xxx) ;  
-    vec3 g = step(x0.yzx, x0.xyz);  
-    vec3 l = 1.0 - g;  vec3 i1 = min( g.xyz, l.zxy );  
-    vec3 i2 = max( g.xyz, l.zxy );  
-    vec3 x1 = x0 - i1 + C.xxx;  
-    vec3 x2 = x0 - i2 + C.yyy;  
-    vec3 x3 = x0 - D.yyy;  i = mod289(i);   vec4 p = permute( permute( permute(              i.z + vec4(0.0, i1.z, i2.z, 1.0 ))           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));  float n_ = 0.142857142857;  vec3  ns = n_ * D.wyz - D.xzx;  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  vec4 x_ = floor(j * ns.z);  vec4 y_ = floor(j - 7.0 * x_ );  vec4 x = x_ *ns.x + ns.yyyy;  vec4 y = y_ *ns.x + ns.yyyy;  vec4 h = 1.0 - abs(x) - abs(y);  vec4 b0 = vec4( x.xy, y.xy );  vec4 b1 = vec4( x.zw, y.zw );  vec4 s0 = floor(b0)*2.0 + 1.0;  vec4 s1 = floor(b1)*2.0 + 1.0;  vec4 sh = -step(h, vec4(0.0));  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;  vec3 p0 = vec3(a0.xy,h.x);  vec3 p1 = vec3(a0.zw,h.y);  vec3 p2 = vec3(a1.xy,h.z);  vec3 p3 = vec3(a1.zw,h.w);  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));  p0 *= norm.x;  p1 *= norm.y;  p2 *= norm.z;  p3 *= norm.w;  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);  m = m * m;  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),                                 dot(p2,x2), dot(p3,x3) ) );  }/**  * @copyright 2016 Apple Inc. All rights reserved. */varying vec2 vUV;uniform float fw;uniform vec2 fj;uniform float et;uniform float dq;uniform float ee;uniform float kq;uniform vec2 qd;uniform vec2 jf;uniform float ww;uniform float qa;uniform float te; void main() {if ((vUV.x< 1.0-qd.x-jf.x)||(vUV.y<1.0-qd.y-jf.y)){return;}vec2 ge=vUV+jf;float gd=snoise(vec3(0.,0.,fw));float wa=snoise(vec3(0.,0.,kq*3.))*0.3+0.7;float qf=snoise(vec3(0.,0.,kq*3.))*0.1+0.9;vec2 dz=vec2(kq+gd*0.1*ee,(ge.x-0.5)/et/qf);vec3 yf=abs(vec3(snoise(vec3(dz,1.0)),snoise(vec3(dz,5.0)),snoise(vec3(dz,9.0))))*0.5+0.01;yf *=min(1.,smoothstep(ww,qa+ww,ge.x)*smoothstep(1.-ww,1.-ww-qa,ge.x))*wa;float da=abs(ge.y-0.5);vec3 kp=smoothstep(yf+(dq/fj.y),yf,vec3(da));kp*=smoothstep(0.25,0.0,yf)*0.7+0.3;kp*= min(1., smoothstep(0., te, ge.x)*smoothstep(1.,1.-te, ge.x));vec4 ca=vec4(1.0,0.176,0.333,.1)*kp.x;vec4 op=vec4(0.251,1.0,0.639,.1)*kp.y;vec4 sf=vec4(0.0,0.478,1.0,.1)*kp.z;gl_FragColor=1.0-(1.0-ca)*(1.0-op)*(1.0-sf);}
+    var o = {
+        antialias: false,
+        mipmap: 1,
+        alpha: false,
+        transparent: false,
+        fragmentShader: p,
+        uniforms: {
+            fw: { type: "float", value: 0 },
+            fj: { type: "vec2", value: [0, 0] },
+            ee: { type: "float", value: 1.5 },
+            kq: { type: "float", value: 0 },
+            et: { type: "float", value: 0.2 },
+            dq: { type: "float", value: 1.5 },
+            ww: { type: "float", value: 0.15 },
+            qa: { type: "float", value: 0.5 },
+            te: { type: "float", value: 0.05 },
+            jf: { type: "vec2", value: [0, 0] },
+            qd: { type: "vec2", value: [1, 1] }
+        },
+        sizes: { defaults: { width: 800, height: 180 } }
+    };
+
+    function t(a) {
+        a = a || {};
+        a.uniforms = q(o.uniforms, a.uniforms);
+        a = q(o, a);
+        if (a.white === true) {
+            a.fragmentShader = l
+        }
+        u.call(this, a);
+        this.setUniform("fj", this.getUniform("resolution"));
+        this.on("update", this._updateChangedUniforms.bind(this))
+    }
+    var m = t.prototype = Object.create(u.prototype); m._updateChangedUniforms = function (d) {
+        this.setUniform("fw", this.getUniform("time") / 1000);
+        this.setUniform("fj", this.getUniform("resolution")); var b = this.getUniform("kq"), f = this.getUniform("ee"), c = (d.time - this.clock.lastFrameTime) / 1000;
+        var a = b + (c * f); this.setUniform("kq", a)
+    };
+    s.exports = t
+}
+
+var Y = aa("@marcom/ac-siri-player").SiriPlayer;
+
+N.createSiriPlayer = function () {
+    var a = {
+        alpha: true,
+        transparent: true,
+        white: false,
+        sizes: {
+            defaults: { width: 462, height: 106 },
+            medium: { width: 462, height: 106 },
+            small: { width: 320, height: 106 }
+        }
+    };
+    this.siriPlayer = new Y(a);
+    this.siriPlayer.setUniforms(ah.talkingStart.propsFrom);
+    while (this.siriWaveEl.firstChild) {
+        this.siriWaveEl.removeChild(this.siriWaveEl.firstChild)
+    }
+    this.siriWaveEl.appendChild(this.siriPlayer.el)
+};
