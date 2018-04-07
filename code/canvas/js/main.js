@@ -16918,7 +16918,25 @@
             q = r("@marcom/ac-object/defaults");
 
         var o = {
-            antialias: false, mipmap: 1, alpha: false, transparent: false, fragmentShader: p, uniforms: { fw: { type: "float", value: 0 }, fj: { type: "vec2", value: [0, 0] }, ee: { type: "float", value: 1.5 }, kq: { type: "float", value: 0 }, et: { type: "float", value: 0.2 }, dq: { type: "float", value: 1.5 }, ww: { type: "float", value: 0.15 }, qa: { type: "float", value: 0.5 }, te: { type: "float", value: 0.05 }, jf: { type: "vec2", value: [0, 0] }, qd: { type: "vec2", value: [1, 1] } }, sizes: { defaults: { width: 800, height: 180 } } };
+            antialias: false,
+            mipmap: 1,
+            alpha: false,
+            transparent: false,
+            fragmentShader: p,
+            uniforms: {
+                fw: { type: "float", value: 0 },
+                fj: { type: "vec2", value: [0, 0] },
+                ee: { type: "float", value: 1.5 },
+                kq: { type: "float", value: 0 },
+                et: { type: "float", value: 0.2 },
+                dq: { type: "float", value: 1.5 },
+                ww: { type: "float", value: 0.15 },
+                qa: { type: "float", value: 0.5 },
+                te: { type: "float", value: 0.05 },
+                jf: { type: "vec2", value: [0, 0] },
+                qd: { type: "vec2", value: [1, 1] }
+            },
+            sizes: { defaults: { width: 800, height: 180 } } };
 
         function t(a) {
             a = a || {}; a.uniforms = q(o.uniforms, a.uniforms); a = q(o, a); if (a.white === true) {
@@ -17620,59 +17638,82 @@
         };
         /** yunpeng */
         function af(a, g, f, b, d, h, c) {
-        this.name = "SiriCommandComponent_" + c; U.call(this, a, g, f, b, d, h, c);
-            this.onEngaged = this.onEngaged.bind(this); this._onTimelineStart = this._onTimelineStart.bind(this);
-            this._onTimelineComplete = this._onTimelineComplete.bind(this); this._onWaveClipUpdate = this._onWaveClipUpdate.bind(this);
-            this.siriWaveEl = g.querySelector(".wave-container"); this.animationDuration = parseFloat(this.element.getAttribute("data-siri-command-duration"));
-            this.completedAnimation = false; if (!(!H.IS_IE && !H.IS_EDGE && !H.IS_ANDROID && !H.IS_OLD_SAFARI && !ak())) {
+        this.name = "SiriCommandComponent_" + c;
+        U.call(this, a, g, f, b, d, h, c);
+            this.onEngaged = this.onEngaged.bind(this);
+            this._onTimelineStart = this._onTimelineStart.bind(this);
+            this._onTimelineComplete = this._onTimelineComplete.bind(this);
+            this._onWaveClipUpdate = this._onWaveClipUpdate.bind(this);
+            this.siriWaveEl = g.querySelector(".wave-container");
+            this.animationDuration = parseFloat(this.element.getAttribute("data-siri-command-duration"));
+            this.completedAnimation = false;
+            if (!(!H.IS_IE && !H.IS_EDGE && !H.IS_ANDROID && !H.IS_OLD_SAFARI && !ak())) {
                 return
-            } if (document.documentElement.classList.contains("no-background-clip")) { return } this._init()
+            }
+            if (document.documentElement.classList.contains("no-background-clip")) { return } this._init()
         } 
-        var N = af.prototype = Object.create(U.prototype); af.prototype.constructor = af; af.IS_SUPPORTED = function () {
+        var N = af.prototype = Object.create(U.prototype);
+        af.prototype.constructor = af; af.IS_SUPPORTED = function () {
             return !H.IS_IE && !H.IS_EDGE && !H.IS_ANDROID && !H.IS_OLD_SAFARI && !ak()
-        }; N._init = function () {
+        };
+        N._init = function () {
         this.trackedElement = this.section.elementEngagement.addElement(this.element, { timeToEngage: 200, inViewThreshold: 0.99 });
             this.trackedElement.on("engaged", this.onEngaged); this.element.classList.add("enhanced");
             this.siriWaveEl.classList.remove("siri-wave"); this.siriWaveClip = new aj(this.siriWaveEl, 0.5, { transform: { rotateY: "0deg" } });
             this.rafWhenVisible = false
-        }; N.createSiriPlayer = function () {
+        };
+        N.createSiriPlayer = function () {
             var a = { alpha: true, transparent: true, white: false, sizes: { defaults: { width: 462, height: 106 }, medium: { width: 462, height: 106 }, small: { width: 320, height: 106 } } };
             this.siriPlayer = new Y(a); this.siriPlayer.setUniforms(ah.talkingStart.propsFrom);
             while (this.siriWaveEl.firstChild) {
                 this.siriWaveEl.removeChild(this.siriWaveEl.firstChild)
             } this.siriWaveEl.appendChild(this.siriPlayer.el)
-        }; N.getSiriWaveClip = function (a) {
+        };
+        N.getSiriWaveClip = function (a) {
             var b = S(a.propsFrom);
             return new aj(b, a.duration, S(a.propsTo), { ease: a.ease, propsEase: S(a.propsEase), propsFrom: S(a.propsFrom), onUpdate: this._onWaveClipUpdate.bind(this, b) })
-        }; N._onWaveClipUpdate = function (b, a) { this.siriPlayer.setUniforms(b) }; N.createTimeline = function () {
+        }
+         N._onWaveClipUpdate = function (b, a) { this.siriPlayer.setUniforms(b) };
+         N.createTimeline = function () {
             var c = 0.8, d = this.animationDuration + 0.001, b = this.animationDuration + 0.2, f = c + b;
             this.myTimeline = new ad({ ease: "linear", onStart: this._onTimelineStart, onComplete: this._onTimelineComplete });
             this.myTimeline.addClip(this.siriWaveClip, 0.4); var h = 0, a = d + h, g = c + h; this.siriStartTalkingClip = this.getSiriWaveClip(ah.talkingStart);
             this.siriEndTalkingClip = this.getSiriWaveClip(ah.talkingEnd); this.myTimeline.addClip(this.siriEndTalkingClip, a);
             this.myTimeline.addClip(this.siriStartTalkingClip, g); this.myTimeline.addClip(this.getSiriWaveClip(ah.talkingPaused), f)
-        }; N._onTimelineStart = function () { I.to(this.element, 1, { autoAlpha: 1 }) }; N._onTimelineComplete = function () {
+        };
+        N._onTimelineStart = function () { I.to(this.element, 1, { autoAlpha: 1 }) };
+        N._onTimelineComplete = function () {
         this.completedAnimation = true
-        }; N.onEngaged = function () {
+        };
+        N.onEngaged = function () {
             if (this.completedAnimation) { return } if (typeof this.siriPlayer == "undefined") {
                 this.createSiriPlayer()
             } this.siriPlayer.start(); if (typeof this.myTimeline == "undefined") {
                 this.createTimeline()
             } this.myTimeline.play()
-        }; N.onSectionWillAppear = function () {
+        };
+        N.onSectionWillAppear = function () {
             if (this.completedAnimation) {
                 return
-            } if (typeof this.siriPlayer == "undefined") { this.createSiriPlayer() } this.siriPlayer.start();
+            }
+            if (typeof this.siriPlayer == "undefined") { this.createSiriPlayer() }
+            this.siriPlayer.start();
             if (typeof this.myTimeline == "undefined") { this.createTimeline() }
-        }; N.onSectionWillDisappear = function () {
+        };
+        N.onSectionWillDisappear = function () {
             if (this.completedAnimation) {
                 this.siriPlayer.stop()
             }
         }; N.onBreakpoint = function () { this.gotoStatic() }; N.onRetinaChange = function () {
             this.gotoStatic()
         }; N.gotoStatic = function () {
-        this.completedAnimation = true; if (typeof this.siriPlayer == "undefined") {
+        this.completedAnimation = true;
+        if (typeof this.siriPlayer == "undefined") {
             this.createSiriPlayer()
-        } this.siriPlayer.stop(); this.siriWaveEl.classList.add("static", "siri-wave"); this.element.classList.add("static")
+        }
+        this.siriPlayer.stop();
+        this.siriWaveEl.classList.add("static", "siri-wave");
+        this.element.classList.add("static")
         }; ai.exports = af
     }, { "@marcom/ac-eclipse": 90, "@marcom/ac-gpu-reporter": 175, "@marcom/ac-gsap": 199, "@marcom/ac-jetpack-lib/core/BaseComponent": 229, "@marcom/ac-jetpack-lib/model/EnabledFeatures": 234, "@marcom/ac-jetpack-lib/utils/Page": 236, "@marcom/ac-object/clone": 244, "@marcom/ac-polyfills/Object/create": undefined, "@marcom/ac-siri-player": 360 }], 404: [function (q, r, o) {
         var p = q("@marcom/ac-jetpack-lib/core/BaseComponent");
